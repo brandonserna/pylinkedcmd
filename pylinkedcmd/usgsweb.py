@@ -4,7 +4,7 @@ import validators
 import re
 from bs4 import BeautifulSoup
 from copy import copy
-from . import utilities
+from pylinkedcmd import utilities
 
 
 class UsgsWeb:
@@ -20,14 +20,30 @@ class UsgsWeb:
         self.usgs_web_root = "https://www.usgs.gov"
 
     def get_staff_inventory_pages(self, link=None, title_="Go to last page"):
-        '''
+        '''USGS Staff Profile Inventory Pages (pagination action)
+
         Unfortunately, the only way to get the entire staff inventory as presented on the USGS web that I've found is to
         iterate over every page in the closed web system and scrape listings. To figure out what pages are contained in
         the listing without filters, we need to consult the first page and get a page number for the last listing from
         a particular link. This function handles that process and gives us back every URL we need to hit.
+
+        Parameters
+        ----------
         :param title_: title of the link pointing to the last page of the inventory
         :type title_: str
+
+        Returns
+        -------
         :return: list of URLs to every page comprising the entire inventory of USGS staff
+
+        Example
+        -------
+        >>> from pylinkedcmd import usgsweb
+        >>> pages = usgsweb.UsgsWeb().get_staff_inventory_pages()
+        >>> pages[0]
+        'https://www.usgs.gov/connect/staff-profiles?page=0'
+        >>> len(pages) > 270
+        True
         '''
         if link is None:
             link = self.usgs_pro_page_listing
